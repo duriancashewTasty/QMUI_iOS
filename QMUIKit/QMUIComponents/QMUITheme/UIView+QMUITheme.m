@@ -152,8 +152,18 @@ QMUISynthesizeIdCopyProperty(qmui_themeDidChangeBlock, setQmui_themeDidChangeBlo
                     }
                 }
             }
-            
-            [self performSelector:setter withObject:value];
+            if(@available(iOS 17.0, *)){
+                if([self isKindOfClass:[UIImageView class]] && [setterString isEqualToString:@"setImage:"]){
+                    UIImageView *imageView = (UIImageView *)self;
+                    imageView.image = nil;
+                    imageView.image = value;
+                } else {
+                    [self performSelector:setter withObject:value];
+                }
+            } else {
+                    [self performSelector:setter withObject:value];
+
+            }
         }
         EndIgnorePerformSelectorLeaksWarning
     }];
